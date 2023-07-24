@@ -1,5 +1,5 @@
 const jwt = require(`jsonwebtoken`);
-const User = require("../../src/users/model/user.model");
+const User = require("../../src/users/model/userModel");
 const { StatusCodes } = require("http-status-codes");
 const rbac = require("../rbac/rbac");
 
