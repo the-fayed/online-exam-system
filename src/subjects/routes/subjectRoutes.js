@@ -2,9 +2,12 @@ const { addSubjectHandler, getAllSubjectsHandler, deleteSubjectHandler, getSubje
 
 const router = require(`express`).Router();
 
-router.post(`/api/v1/subjects`, addSubjectHandler);
-router.get(`/api/v1/subjects/:id`, getAllSubjectsHandler);
-router.delete(`/api/v1/subjects/:id`, deleteSubjectHandler);
-router.get(`/api/v1/subjects`, getSubjectInfoHandler);
+const isAuthorized = require(`../../../common/middleware/isAuthorized`);
+const { ADD_SUBJECT, GET_ALL_SUBJECTS, DELETE_SUBJECT, GET_SUBJECT_INFO } = require("../endpoints");
+
+router.post(`/api/v1/subjects`, isAuthorized(ADD_SUBJECT), addSubjectHandler);
+router.get(`/api/v1/subjects/:id`, isAuthorized(GET_ALL_SUBJECTS), getAllSubjectsHandler);
+router.delete(`/api/v1/subjects/:id`, isAuthorized(DELETE_SUBJECT), deleteSubjectHandler);
+router.get(`/api/v1/subjects`, isAuthorized(GET_SUBJECT_INFO), getSubjectInfoHandler);
 
 module.exports = router;
