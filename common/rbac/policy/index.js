@@ -8,7 +8,7 @@ const opts = {
     can: adminPolicy,
   },
   [roles.PROFESSOR]: {
-    can: userPolicy,
+    can: professorPolicy,
   },
   [roles.STUDENT]: {
     can: studentPolicy,

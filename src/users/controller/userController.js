@@ -64,7 +64,7 @@ exports.getUserInfoHandler = async (req, res) => {
     if (user) {
       res
         .status(StatusCodes.OK)
-        .json({ message: `${user.firstName}'s profile!`, data: user });
+        .json({ message: `${user.userName}'s profile!`, data: user });
     } else {
       res.status(StatusCodes.BAD_REQUEST).json({ message: `User not found!` });
     }
@@ -243,7 +243,7 @@ exports.loginHandler = async (req, res) => {
     } else {
       const match = await bcrypt.compare(password, user.password);
       if (match) {
-        const token = jwt.sign(
+        const loginToken = jwt.sign(
           {
             id: user._id,
             role: user.role,
@@ -252,7 +252,9 @@ exports.loginHandler = async (req, res) => {
           process.env.SECRET_KEY,
           { expiresIn: process.env.EXPIRATION_PERIOD }
         );
-        res.status(StatusCodes.OK).json({ message: `Login success!`, token });
+        res
+          .status(StatusCodes.OK)
+          .json({ message: `Login success!`, loginToken, data: user });
       } else {
         res
           .status(StatusCodes.BAD_REQUEST)

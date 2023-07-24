@@ -21,7 +21,13 @@ const {
   deleteUserSchema,
   signUpSchema,
 } = require("../express-validator/validationSchema");
-const { ADD_USER, UPDATE_USER, DELETE_USER } = require("../endpoints");
+const {
+  ADD_USER,
+  UPDATE_USER,
+  DELETE_USER,
+  GET_ALL_USERS,
+  GET_USER_INFO,
+} = require("../endpoints");
 
 router.post(
   `/api/v1/users`,
@@ -29,8 +35,12 @@ router.post(
   validateRequest(addUserSchema),
   addUserHandler
 );
-router.get(`/api/v1/users`, getAllUsersHandler);
-router.get(`/api/v1/users/:id`, getUserInfoHandler);
+router.get(`/api/v1/users`, isAuthorized(GET_ALL_USERS), getAllUsersHandler);
+router.get(
+  `/api/v1/users/:id`,
+  isAuthorized(GET_USER_INFO),
+  getUserInfoHandler
+);
 router.patch(
   `/api/v1/users/:id`,
   isAuthorized(UPDATE_USER),

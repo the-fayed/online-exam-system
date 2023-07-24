@@ -22,7 +22,7 @@ module.exports = (endpoint) => {
           } else {
             res
               .status(StatusCodes.UNAUTHORIZED)
-              .json({ message: `Unauthorized!**********` });
+              .json({ message: `Unauthorized!` });
           }
         }
       } catch (error) {
