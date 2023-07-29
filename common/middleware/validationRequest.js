@@ -1,29 +1,13 @@
-const { validationResult, validationChain } = require(`express-validator`);
 const { StatusCodes } = require("http-status-codes");
 
-const validationRequest = (validations) => {
+
+module.exports = (schema) => {
   return async (req, res, next) => {
     try {
-      for (let validation of validations) {
-        const result = await validation.run(req);
-        if (result.errors.length) {
-          break;
-        }
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
-          return next();
-        }
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: `Validation error!`, error: error });
-      }
+        const validationResults = await schema.validateAsync(req.body); 
+        next();
     } catch (error) {
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: `Internal server error!`, error: error });
-      console.log(error);
+      res.status(StatusCodes.BAD_REQUEST).json({message: `Validation Error!`, error: error.details[0].message});
     }
-  };
-};
-
-module.exports = validationRequest;
+  }
+}

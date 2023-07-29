@@ -18,9 +18,9 @@ const isAuthorized = require(`../../../common/middleware/isAuthorized`);
 const {
   addUserSchema,
   updateUserSchema,
-  deleteUserSchema,
   signUpSchema,
-} = require("../express-validator/validationSchema");
+  loginSchema
+} = require("../joi/validateUser");
 const {
   ADD_USER,
   UPDATE_USER,
@@ -50,11 +50,10 @@ router.patch(
 router.delete(
   `/api/v1/users/:id`,
   isAuthorized(DELETE_USER),
-  validateRequest(deleteUserSchema),
   deleteUserHandler
 );
 
 router.post(`/api/v1/signup`, validateRequest(signUpSchema), signUpHandler);
+router.post(`/api/v1/auth`, validateRequest(loginSchema), loginHandler);
 router.get(`/api/v1/users/:id/verify/:token`, verifyEmailHandler);
-router.post(`/api/v1/auth`, loginHandler);
 module.exports = router;
