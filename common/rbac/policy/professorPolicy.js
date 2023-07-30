@@ -7,11 +7,18 @@ const {
     DELETE_SUBJECT
   } = require(`../../../src/subjects/endpoints`);
 
+  const {
+    GET_ALL_DEPARTMENTS,
+    GET_DEPARTMENT_INFO,
+  } = require(`../../../src/department/endpoints`);
+
 module.exports = [
     UPDATE_USER,
     GET_USER_INFO,
     ADD_SUBJECT,
     GET_ALL_SUBJECTS,
     GET_SUBJECT_INFO,
-    DELETE_SUBJECT
+    DELETE_SUBJECT,
+    GET_ALL_DEPARTMENTS,
+    GET_DEPARTMENT_INFO,
 ];

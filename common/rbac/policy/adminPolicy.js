@@ -13,6 +13,14 @@ const {
   DELETE_SUBJECT
 } = require(`../../../src/subjects/endpoints`);
 
+const {
+  ADD_DEPARTMENT,
+  UPDATE_DEPARTMENT,
+  GET_ALL_DEPARTMENTS,
+  GET_DEPARTMENT_INFO,
+  DELETE_DEPARTMENT
+} = require(`../../../src/department/endpoints`);
+
 
 module.exports = [
   ADD_USER,
@@ -23,5 +31,10 @@ module.exports = [
   ADD_SUBJECT,
   GET_ALL_SUBJECTS,
   GET_SUBJECT_INFO,
-  DELETE_SUBJECT
+  DELETE_SUBJECT,
+  ADD_DEPARTMENT,
+  UPDATE_DEPARTMENT,
+  GET_ALL_DEPARTMENTS,
+  GET_DEPARTMENT_INFO,
+  DELETE_DEPARTMENT
 ];

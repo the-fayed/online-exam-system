@@ -23,9 +23,13 @@ const usersRoutes = require("./src/users/routes/userRoutes");
 // importing subject routes
 const subjectRoutes = require(`./src/subjects/routes/subjectRoutes`);
 
+//importing department routes
+const departmentRoutes = require(`./src/department/routes/departmentRoutes`);
+
 
 app.use(usersRoutes);
 app.use(subjectRoutes);
+app.use(departmentRoutes);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

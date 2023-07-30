@@ -17,6 +17,11 @@ const subjectSchema = new Schema({
         ref: `user`,
         required: true
     },
+    grade: {
+        type: Schema.Types.ObjectId,
+        ref: `grade`,
+        required: true
+    }
 }, {
     timestamps: true
 })
