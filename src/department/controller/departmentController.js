@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const Department = require(`../model/departmentModel`);
 
 exports.addDepartmentHandler = async (req, res) => {
-  const { departmentName } = req.body;
+  const { departmentName, departmentDescription } = req.body;
   try {
     const exist = await Department.findOne({
       departmentName:
@@ -15,6 +15,7 @@ exports.addDepartmentHandler = async (req, res) => {
     } else {
       let department = await Department.create({
         departmentName,
+        departmentDescription
       });
       res
         .status(StatusCodes.CREATED)
@@ -33,10 +34,11 @@ exports.addDepartmentHandler = async (req, res) => {
 
 exports.updateDepartmentHandler = async (req, res) => {
     const {id} = req.params;
-    const {departmentName} = req.body;
+    const {departmentName, departmentDescription} = req.body;
     try {
         const department = await Department.findOneAndUpdate({_id: id}, {
             departmentName: departmentName,
+            departmentDescription: departmentDescription
         }, {new: true});
         if (department) {
             res.status(StatusCodes.OK).json({message: `${departmentName} updated successfully!`, data: department})

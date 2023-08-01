@@ -26,10 +26,17 @@ const subjectRoutes = require(`./src/subjects/routes/subjectRoutes`);
 //importing department routes
 const departmentRoutes = require(`./src/department/routes/departmentRoutes`);
 
+//importing levels routes:
+const levelsRoutes = require(`./src/levels/routes/levelsRoutes`);
+
+//importing exams routes:
+const examRoutes = require(`./src/exams/routes/examRoutes`);
 
 app.use(usersRoutes);
 app.use(subjectRoutes);
 app.use(departmentRoutes);
+app.use(levelsRoutes);
+app.use(examRoutes);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

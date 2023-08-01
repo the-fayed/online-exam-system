@@ -7,6 +7,10 @@ const departmentSchema = new Schema({
         required: true,
         unique: true
     },
+    departmentDescription: {
+        type: String,
+        default: ``,
+    }
 }, {
     timestamps: true,
 })
