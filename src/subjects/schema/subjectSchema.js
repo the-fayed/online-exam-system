@@ -21,13 +21,6 @@ const subjectSchema = new Schema(
       ref: `user`,
       required: true,
     },
-    department: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: `department`,
-        required: true,
-      },
-    ],
     level: {
       type: Schema.Types.ObjectId,
       ref: `level`,

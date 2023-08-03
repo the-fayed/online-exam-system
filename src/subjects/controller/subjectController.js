@@ -3,14 +3,8 @@ const Subject = require(`../model/subjectModel`);
 const User = require("../../users/model/userModel");
 
 exports.addSubjectHandler = async (req, res) => {
-  const {
-    subjectName,
-    subjectCode,
-    teachBy,
-    subjectDescription,
-    level,
-    department,
-  } = req.body;
+  const { subjectName, subjectCode, teachBy, subjectDescription, level } =
+    req.body;
   try {
     const exist = await Subject.findOne({
       subjectCode: subjectCode.toUpperCase(),
@@ -26,7 +20,6 @@ exports.addSubjectHandler = async (req, res) => {
         teachBy,
         subjectDescription,
         level,
-        department,
       });
       res.status(StatusCodes.CREATED).json({
         message: `${subjectName} created successfully!`,
@@ -48,8 +41,17 @@ exports.getAllSubjectsHandler = async (req, res) => {
     let subjectsCount = 0;
     if (user.role == `professor` && user.verified == true) {
       const subjects = await Subject.find({ teachBy: id })
-        .populate(`department`, `departmentName`)
-        .populate(`level`, `levelName`)
+        .populate({
+          path: `subject`,
+          populate: {
+            path: `level`,
+            select: `levelName`,
+            populate: {
+              path: `department`,
+              select: `departmentName`,
+            },
+          },
+        })
         .select(`-teachBy`);
       for (let subject in subjects) {
         subjectsCount++;
@@ -60,9 +62,17 @@ exports.getAllSubjectsHandler = async (req, res) => {
         data: subjects,
       });
     } else if (user.role == `admin`) {
-      const subjects = await Subject.find()
-        .populate(`department`, `departmentName`)
-        .populate(`level`, `levelName`);
+      const subjects = await Subject.find().populate({
+        path: `subject`,
+        populate: {
+          path: `level`,
+          select: `levelName`,
+          populate: {
+            path: `department`,
+            select: `departmentName`,
+          },
+        },
+      });
       for (let subject in subjects) {
         subjectsCount++;
       }
@@ -83,7 +93,17 @@ exports.getAllSubjectsHandler = async (req, res) => {
 exports.getSubjectInfoHandler = async (req, res) => {
   const { id } = req.query;
   try {
-    const subject = await Subject.findOne({ _id: id });
+    const subject = await Subject.findOne({ _id: id }).populate({
+      path: `subject`,
+      populate: {
+        path: `level`,
+        select: `levelName`,
+        populate: {
+          path: `department`,
+          select: `departmentName`,
+        },
+      },
+    });
     if (subject) {
       res
         .status(StatusCodes.OK)

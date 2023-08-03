@@ -55,25 +55,21 @@ exports.getAllExamsHandler = async (req, res) => {
   } else if (req.user.role == `admin`) {
     try {
       let examsCount = 0;
-      const exams = await Exam.find()
-        .populate({
-          path: `subject`,
-          select: [`subjectName`, `subjectCode`],
+      const exams = await Exam.find().populate({
+        path: `subject`,
+        select: [`subjectName`, `subjectCode`],
+        populate: {
+          path: `level`,
+          model: `level`,
+          select: `levelName`,
           populate: {
             path: `department`,
             model: `department`,
             select: `departmentName`,
           },
-        })
-        .populate({
-          path: `subject`,
-          select: [`subjectName`, `subjectCode`],
-          populate: {
-            path: `level`,
-            model: `level`,
-            select: `levelName`,
-          },
-        });
+        },
+      });
+
       for (let exam in exams) {
         examsCount++;
       }
@@ -92,5 +88,69 @@ exports.getAllExamsHandler = async (req, res) => {
         .json({ message: `Internal server error!`, error: error });
       console.log(error);
     }
+  }
+};
+
+exports.updateExamHandler = async (req, res) => {
+  const { id } = req.params;
+  const { title, date, duration } = req.body;
+  try {
+    const exam = await Exam.findOne({ _id: id });
+    if (exam) {
+      const updated = await Exam.updateOne(
+        { _id: id },
+        {
+          title,
+          date,
+          duration,
+        }
+      ).populate({
+        path: `subject`,
+        select: `subjectName subjectCode`,
+        populate: {
+          path: "level",
+          select: `levelName`,
+          populate: {
+            path: `department`,
+            select: `departmentName`,
+          },
+        },
+      });
+      if (updated.modifiedCount) {
+        res
+          .status(StatusCodes.OK)
+          .json({ message: `Exam updated successfully!`, data: updated });
+      } else {
+        res
+          .status(StatusCodes.NOT_MODIFIED)
+          .json({ message: `Error while updating exam!` });
+      }
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: `Exam not Found!` });
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: `Internal server error!`, error: error });
+    console.log(error);
+  }
+};
+
+exports.getExamInfoHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const exam = await Exam.findOne({ _id: id });
+    console.log(exam);
+    if (exam) {
+      res.status(StatusCodes.OK).json({
+        message: `exam`,
+        data: exam,
+      });
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: `Internal server error!`, error: error });
+    console.log(error);
   }
 };
