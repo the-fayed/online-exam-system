@@ -139,13 +139,50 @@ exports.updateExamHandler = async (req, res) => {
 exports.getExamInfoHandler = async (req, res) => {
   const { id } = req.params;
   try {
-    const exam = await Exam.findOne({ _id: id });
+    const exam = await Exam.findOne({ _id: id }).populate({
+      path: `subject`,
+      select: `subjectName subjectCode`,
+      populate: {
+        path: `level`,
+        select: `levelName`,
+        populate: {
+          path: `department`,
+          select: `departmentName`,
+        },
+      },
+    });
     console.log(exam);
     if (exam) {
       res.status(StatusCodes.OK).json({
         message: `exam`,
         data: exam,
       });
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: `Internal server error!`, error: error });
+    console.log(error);
+  }
+};
+
+exports.deleteExamHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const exam = await Exam.findOne({ _id: id });
+    if (exam) {
+      const deleted = await Exam.deleteOne({ _id: id });
+      if (deleted.deletedCount > 0) {
+        res
+          .status(StatusCodes.OK)
+          .json({ message: `Exam deleted successfully!`, data: id });
+      } else {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `Something went wrong, please try again later.` });
+      }
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: `Exam not found!` });
     }
   } catch (error) {
     res
