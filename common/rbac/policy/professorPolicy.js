@@ -17,7 +17,13 @@ const {
   GET_LEVEL_INFO,
 } = require(`../../../src/levels/endpoints`);
 
-const { GET_ALL_EXAMS } = require(`../../../src/exams/endpoints`);
+const {
+  GET_ALL_EXAMS,
+  ADD_NEW_EXAM,
+  UPDATE_EXAM,
+  DELETE_EXAM,
+  GET_EXAM_INFO,
+} = require(`../../../src/exams/endpoints`);
 
 module.exports = [
   UPDATE_USER,
@@ -31,4 +37,8 @@ module.exports = [
   GET_ALL_LEVELS,
   GET_LEVEL_INFO,
   GET_ALL_EXAMS,
+  ADD_NEW_EXAM,
+  UPDATE_EXAM,
+  DELETE_EXAM,
+  GET_EXAM_INFO,
 ];
