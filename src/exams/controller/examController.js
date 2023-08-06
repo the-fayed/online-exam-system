@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const Exam = require(`../model/exam model/examModel`);
+const Exam = require(`../model/examModel`);
 
 exports.addNewExamHandler = async (req, res) => {
   const { id } = req.params;

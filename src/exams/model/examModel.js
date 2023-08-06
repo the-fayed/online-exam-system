@@ -1,4 +1,4 @@
-const examSchema = require(`../../schema/examSchema`);
+const examSchema = require(`../schema/examSchema`);
 
 const mongoose = require(`mongoose`);
 
