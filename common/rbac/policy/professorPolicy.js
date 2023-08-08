@@ -25,6 +25,13 @@ const {
   GET_EXAM_INFO,
 } = require(`../../../src/exams/endpoints`);
 
+const {
+  ADD_NEW_QUESTION,
+  DELETE_QUESTION,
+  UPDATE_QUESTION,
+  GET_ALL_QUESTIONS,
+} = require(`../../../src/questions/endpoints`);
+
 module.exports = [
   UPDATE_USER,
   GET_USER_INFO,
@@ -41,4 +48,8 @@ module.exports = [
   UPDATE_EXAM,
   DELETE_EXAM,
   GET_EXAM_INFO,
+  ADD_NEW_QUESTION,
+  DELETE_QUESTION,
+  UPDATE_QUESTION,
+  GET_ALL_QUESTIONS,
 ];

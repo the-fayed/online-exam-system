@@ -21,6 +21,20 @@ const userSchema = new Schema(
       enum: [`admin`, `professor`, `student`],
       default: `student`,
     },
+    department: {
+      type: Schema.Types.ObjectId,
+      ref: `department`,
+      required: function () {
+        return this.role == `student`;
+      },
+    },
+    level: {
+      type: Schema.Types.ObjectId,
+      ref: `level`,
+      required: function () {
+        return this.role == `student`;
+      },
+    },
     verified: {
       type: Boolean,
       default: false,

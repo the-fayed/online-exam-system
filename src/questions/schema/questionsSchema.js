@@ -14,11 +14,15 @@ const questionsSchema = new Schema(
     options: {
       type: [String],
       required: true,
+      min: 2,
+      max: 4,
     },
     rightAnswer: {
       type: Number,
       required: true,
       enum: [0, 1, 2, 3],
+      min: 1,
+      max: 1,
     },
   },
   { timestamps: true }
