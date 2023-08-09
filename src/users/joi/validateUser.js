@@ -11,13 +11,9 @@ const addUserSchema = Joi.object().keys({
     .required(),
   verified: Joi.boolean().required(),
   role: Joi.string().valid(`admin`, `student`, `professor`).required(),
-  department: Joi.alternatives().conditional(`role`, {
+  studentCode: Joi.alternatives().conditional(`role`, {
     is: `student`,
-    then: Joi.string().id().required(),
-  }),
-  level: Joi.alternatives().conditional(`role`, {
-    is: `student`,
-    then: Joi.string().id().required(),
+    then: Joi.number().required(),
   }),
 });
 
@@ -39,13 +35,9 @@ const signUpSchema = Joi.object().keys({
     .min(8)
     .required(),
   role: Joi.any().invalid(`admin`).valid(`student`, `professor`).required(),
-  department: Joi.alternatives().conditional(`role`, {
+  studentCode: Joi.alternatives().conditional(`role`, {
     is: `student`,
-    then: Joi.string().id().required(),
-  }),
-  level: Joi.alternatives().conditional(`role`, {
-    is: `student`,
-    then: Joi.string().id().required(),
+    then: Joi.number().required(),
   }),
 });
 

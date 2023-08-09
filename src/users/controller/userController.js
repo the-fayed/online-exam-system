@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require(`../model/userModel`);
+const Department = require(`../../department/model/departmentModel`);
+const Level = require(`../../levels/model/levelsModel`);
 const crypto = require(`crypto`);
 const Token = require(`../model/tokenModel`);
 const sendEmail = require(`../../../common/services/sendEmail`);
@@ -129,10 +131,11 @@ exports.deleteUserHandler = async (req, res) => {
 };
 
 exports.signUpHandler = async (req, res) => {
-  const { userName, email, password, role } = req.body;
+  const { userName, email, password, role, studentCode } = req.body;
   try {
     const emailExists = await User.findOne({ email });
     const userNameExists = await User.findOne({ userName });
+    const level = await Level.findOne({ studentsCodes: studentCode });
     if (emailExists) {
       res
         .status(StatusCodes.BAD_REQUEST)
@@ -147,6 +150,7 @@ exports.signUpHandler = async (req, res) => {
         email,
         password,
         role,
+        level: level._id,
       });
       const token = await Token.create({
         userId: user._id,
@@ -165,42 +169,6 @@ exports.signUpHandler = async (req, res) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: `Internal server error!`, error: error });
-    console.log(error);
-  }
-};
-
-exports.singUpHandler = async (req, res) => {
-  const { firstName, lastName, password, email } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (user) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: `Email already exist!` });
-    } else {
-      const newUser = await User.create({
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-      const token = await Token.create({
-        userId: newUser._id,
-        token: crypto.randomBytes(32).toString(`hex`),
-      });
-      const url = `${process.env.BASE_URL}users/${newUser._id}/verify/${token}`;
-      const template = `<h1>Email Verification</h1>
-<h3>Welcome to our TO-DO app!</h3>
-<p> To verify your email please click this link <a href="${url}">verify now</a></p>`;
-      await sendEmail(newUser.email, `Email Verification`, template);
-      res.status(StatusCodes.OK).json({
-        message: `A verification email was sent to you!`,
-      });
-    }
-  } catch (error) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: `Internal server error!`, error });
     console.log(error);
   }
 };

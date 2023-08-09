@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const Level = require(`../model/levelsModel`);
 
 exports.addNewLevelHandler = async (req, res) => {
-  const { levelName, department } = req.body;
+  const { levelName, department, studentsCodes } = req.body;
   try {
     const exist = await Level.findOne({
       levelName: levelName.charAt(0).toUpperCase() + levelName.slice(1),
@@ -15,6 +15,7 @@ exports.addNewLevelHandler = async (req, res) => {
       const level = await Level.create({
         levelName,
         department,
+        studentsCodes,
       });
       res.status(StatusCodes.CREATED).json({
         message: `${level.levelName} created successfully!`,
@@ -71,22 +72,26 @@ exports.getLevelInfoHandler = async (req, res) => {
 
 exports.updateLevelHandler = async (req, res) => {
   const { id } = req.params;
-  const { levelName, department } = req.body;
+  const { levelName, department, studentsCodes } = req.body;
   try {
-    const level = await Level.findByIdAndUpdate(
-      { _id: id },
-      { levelName, department },
-      { new: true }
-    );
+    const level = await Level.findOne({ _id: id });
     if (level) {
-      res.status(StatusCodes.OK).json({
-        message: `${grade.gradeName} updated successfully!`,
-        data: level,
-      });
+      const updated = await Level.updateOne(
+        { _id: id },
+        { levelName, department, studentsCodes },
+        { new: true }
+      );
+      if (updated.modifiedCount > 0) {
+        res
+          .status(StatusCodes.OK)
+          .json({ message: `Level updated successfully!`, data: updated });
+      } else {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `Error while updating level!` });
+      }
     } else {
-      res
-        .status(StatusCodes.NOT_MODIFIED)
-        .json({ message: `Error while updating!` });
+      res.status(StatusCodes.NOT_FOUND).json({ message: `Level not found!` });
     }
   } catch (error) {
     res

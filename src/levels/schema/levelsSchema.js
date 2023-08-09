@@ -12,6 +12,11 @@ const levelsSchema = new Schema(
       ref: `department`,
       required: true,
     },
+    studentsCodes: [
+      {
+        type: Number,
+      },
+    ],
   },
   {
     timestamps: true,

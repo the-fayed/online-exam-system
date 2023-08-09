@@ -19,7 +19,7 @@ const {
   addUserSchema,
   updateUserSchema,
   signUpSchema,
-  loginSchema
+  loginSchema,
 } = require("../joi/validateUser");
 const {
   ADD_USER,
