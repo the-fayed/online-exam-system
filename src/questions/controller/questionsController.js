@@ -1,22 +1,48 @@
 const { StatusCodes } = require("http-status-codes");
 const Question = require(`../model/questionsModel`);
+const Exam = require(`../../exams/model/examModel`);
 
 exports.getAllQuestionsHandler = async (req, res) => {
   const { examId } = req.params;
+  const user = req.user;
   try {
-    let totalQuestions = 0;
-    const questions = await Question.find({ exam: examId });
-    if (questions) {
-      for (let question in questions) {
-        totalQuestions++;
+    if (
+      user.role == `admin` ||
+      (user.role == `professor` && user.verified == true)
+    ) {
+      let totalQuestions = 0;
+      const questions = await Question.find({ exam: examId });
+      if (questions) {
+        for (let question in questions) {
+          totalQuestions++;
+        }
+        res
+          .status(StatusCodes.OK)
+          .json({ message: `Questions`, totalQuestions, date: questions });
+      } else {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `No questions found!` });
       }
-      res
-        .status(StatusCodes.OK)
-        .json({ message: `Questions`, totalQuestions, date: questions });
-    } else {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: `No questions found!` });
+    } else if (user.role == `student` && user.verified == true) {
+      const exam = await Exam.findOne({ _id: examId }).populate(
+        `subject`,
+        `level -_id`
+      );
+      if ((exam.subject.level = user.level)) {
+        const questions = await Question.find({ exam: exam._id }).select(
+          `-rightAnswer`
+        );
+        res.status(StatusCodes.ACCEPTED).json({
+          examTitle: `${exam.title}`,
+          duration: `${exam.duration}`,
+          questions: questions,
+        });
+      } else if ((exam.subject.level = user.level)) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `This exam will be in ${exam.date}` });
+      }
     }
   } catch (error) {
     res
@@ -30,21 +56,26 @@ exports.addNewQuestionHandler = async (req, res) => {
   const { examId } = req.params;
   const { question, options, rightAnswer } = req.body;
   try {
-    const NewQuestion = await Question.create({
-      exam: examId,
-      question,
-      options,
-      rightAnswer,
-    });
-    if (NewQuestion) {
-      res.status(StatusCodes.CREATED).json({
-        message: `Question created successfully!`,
-        data: NewQuestion,
+    const exam = await Exam.findOne({ _id: examId });
+    if (exam) {
+      const NewQuestion = await Question.create({
+        exam: examId,
+        question,
+        options,
+        rightAnswer,
       });
+      if (NewQuestion) {
+        res.status(StatusCodes.CREATED).json({
+          message: `Question created successfully!`,
+          data: NewQuestion,
+        });
+      } else {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `Error while creating question, try again later.` });
+      }
     } else {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: `Error while creating question, try again later.` });
+      res.status(StatusCodes.NOT_FOUND).json({ message: `Exam not found!` });
     }
   } catch (error) {
     res
@@ -99,12 +130,10 @@ exports.deleteQuestionHandler = async (req, res) => {
         _id: questionId,
       });
       if (deleted.deletedCount > 0) {
-        res
-          .status(StatusCodes.OK)
-          .json({
-            message: `Question deleted successfully!`,
-            data: questionId,
-          });
+        res.status(StatusCodes.OK).json({
+          message: `Question deleted successfully!`,
+          data: questionId,
+        });
       } else {
         res
           .status(StatusCodes.BAD_REQUEST)

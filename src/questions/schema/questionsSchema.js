@@ -21,8 +21,9 @@ const questionsSchema = new Schema(
       type: Number,
       required: true,
       enum: [0, 1, 2, 3],
-      min: 1,
-      max: 1,
+      minLin: 1,
+      maxLin: 1,
+      max: 3,
     },
   },
   { timestamps: true }
