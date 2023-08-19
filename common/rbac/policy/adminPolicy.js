@@ -45,6 +45,8 @@ const {
   GET_ALL_QUESTIONS,
 } = require(`../../../src/questions/endpoints`);
 
+const { SUBMIT_ANSWER, GET_GRADE } = require(`../../../src/answers/endpoints`);
+
 module.exports = [
   ADD_USER,
   UPDATE_USER,
@@ -75,4 +77,6 @@ module.exports = [
   DELETE_QUESTION,
   UPDATE_QUESTION,
   GET_ALL_QUESTIONS,
+  SUBMIT_ANSWER,
+  GET_GRADE,
 ];

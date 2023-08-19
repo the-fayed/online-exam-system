@@ -48,38 +48,75 @@ exports.submitAnswersHandler = async (req, res) => {
 
 exports.compareStudentAnswerWithRightAnswer = async (req, res) => {
   const { examId, studentId } = req.params;
-  try {
-    let grade = 0;
-    let studentAnswers = [];
-    let questionsCount = 0;
-    const questions = await Question.find({ exam: examId }).populate(
-      `exam`,
-      `subject title date`
-    );
-    if (questions) {
-      for (let question in questions) {
-        questionsCount++;
-        const studentAnswer = await Answer.findOne({
-          questionId: questions[question]._id,
-          studentId: studentId,
-        }).populate(`studentId`, `userName -_id`);
-        studentAnswers.push(studentAnswer);
-        if (studentAnswer.answer == questions[question].rightAnswer) {
-          grade++;
+  const user = req.user;
+  if (user.role == `professor` || user.role == `admin`) {
+    try {
+      let grade = 0;
+      let studentAnswers = [];
+      let questionsCount = 0;
+      const questions = await Question.find({ exam: examId }).populate(
+        `exam`,
+        `subject title date`
+      );
+      if (questions) {
+        for (let question in questions) {
+          questionsCount++;
+          const studentAnswer = await Answer.findOne({
+            questionId: questions[question]._id,
+            studentId: studentId,
+          }).populate(`studentId`, `userName -_id`);
+          studentAnswers.push(studentAnswer);
+          if (studentAnswer.answer == questions[question].rightAnswer) {
+            grade++;
+          }
         }
+        res.status(StatusCodes.ACCEPTED).json({
+          student: studentAnswers._id,
+          questionsCount,
+          questions,
+          studentAnswers,
+          grade,
+        });
       }
-      res.status(StatusCodes.ACCEPTED).json({
-        student: studentAnswers._id,
-        questionsCount,
-        questions,
-        studentAnswers,
-        grade,
-      });
+    } catch (error) {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: `Internal server error!`, error });
+      console.log(error);
     }
-  } catch (error) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: `Internal server error!`, error });
-    console.log(error);
+  } else if (user.role == `student`) {
+    try {
+      let grade = 0;
+      let studentAnswers = [];
+      let questionsCount = 0;
+      const questions = await Question.find({ exam: examId }).populate(
+        `exam`,
+        `subject title date`
+      );
+      if (questions) {
+        for (let question in questions) {
+          questionsCount++;
+          const studentAnswer = await Answer.findOne({
+            questionId: questions[question]._id,
+            studentId: studentId,
+          }).populate(`studentId`, `userName -_id`);
+          studentAnswers.push(studentAnswer);
+          if (studentAnswer.answer == questions[question].rightAnswer) {
+            grade++;
+          }
+        }
+        res.status(StatusCodes.ACCEPTED).json({
+          student: studentAnswers._id,
+          studentAnswers,
+          fullMark: questionsCount,
+          grade,
+        });
+      }
+    } catch (error) {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: `Internal server error!`, error });
+      console.log(error);
+    }
   }
 };
