@@ -46,40 +46,6 @@ exports.submitAnswersHandler = async (req, res) => {
   }
 };
 
-// exports.getStudentGradeHandler = async (req, res) => {
-//   const { examId, studentId } = req.params;
-//   try {
-//     let grade = 0;
-//     let studentAnswers = [];
-//     const questions = await Question.find({ exam: examId }).select(
-//       `rightAnswer _id`
-//     );
-//     for (let rightAnswer in questions) {
-//       const studentAnswer = await Answer.findOne({
-//         studentId: studentId,
-//         questionId: questions[rightAnswer]._id,
-//       }).select(`questionId answer`);
-//       studentAnswers.push(studentAnswer);
-//       for (let stdAns in studentAnswers) {
-//         if (
-//           studentAnswers[stdAns].answer === questions[rightAnswer].rightAnswer
-//         ) {
-//           grade++;
-//         }
-//       }
-//     }
-//     console.log(studentAnswers, questions);
-//     res
-//       .status(StatusCodes.OK)
-//       .json({ questionsRightAnswers: questions, studentAnswers, grade });
-//   } catch (error) {
-//     res
-//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-//       .json({ message: `Internal server error!`, error });
-//     console.log(error);
-//   }
-// };
-
 exports.compareStudentAnswerWithRightAnswer = async (req, res) => {
   const { examId, studentId } = req.params;
   try {

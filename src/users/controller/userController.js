@@ -5,6 +5,7 @@ const Level = require(`../../levels/model/levelsModel`);
 const crypto = require(`crypto`);
 const Token = require(`../model/tokenModel`);
 const sendEmail = require(`../../../common/services/sendEmail`);
+const userVerificationTemplate = require(`../../../common/services/userVerificationTemplate`);
 const bcrypt = require(`bcrypt`);
 const jwt = require(`jsonwebtoken`);
 
@@ -157,10 +158,11 @@ exports.signUpHandler = async (req, res) => {
         token: crypto.randomBytes(32).toString(`hex`),
       });
       const url = `${process.env.BASE_URL}users/${user._id}/verify/${token}`;
-      const template = `<h1>Email Verification</h1>
-        <h3>Welcome to the online exam system!</h3>
-        <p> To verify your email please click this link <a href="${url}">verify now</a></p>`;
-      await sendEmail(user.email, `Email Verification`, template);
+      await sendEmail(
+        user.email,
+        `Email Verification`,
+        userVerificationTemplate(url)
+      );
       res.status(StatusCodes.CREATED).json({
         message: `${userName}'s account created successfully, please check your email inbox to verify your email!`,
       });
