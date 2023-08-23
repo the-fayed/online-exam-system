@@ -37,6 +37,7 @@ exports.addSubjectHandler = async (req, res) => {
 
 exports.getAllSubjectsHandler = async (req, res) => {
   const { id } = req.params;
+  const { page, size } = req.query;
   const { limit, skip } = paginationService(page, size);
   try {
     const user = await User.findOne({ _id: id }).skip(skip).limit(limit);

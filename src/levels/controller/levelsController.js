@@ -32,6 +32,7 @@ exports.addNewLevelHandler = async (req, res) => {
 };
 
 exports.getAllLevelsHandler = async (req, res) => {
+  const { page, size } = req.query;
   const { skip, limit } = paginationService(page, size);
   try {
     let numberOfLevels = 0;

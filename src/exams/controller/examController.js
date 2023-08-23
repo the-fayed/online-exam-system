@@ -31,7 +31,7 @@ exports.addNewExamHandler = async (req, res) => {
 
 exports.getAllExamsHandler = async (req, res) => {
   if (req.user.role == `professor`) {
-    const { id } = req.query;
+    const { id, page, size } = req.query;
     const { limit, skip } = paginationService(page, size);
     try {
       let examsCount = 0;

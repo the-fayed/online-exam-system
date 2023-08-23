@@ -5,8 +5,9 @@ const paginationService = require("../../../common/services/paginationService");
 
 exports.getAllQuestionsHandler = async (req, res) => {
   const { examId } = req.params;
-  const user = req.user;
+  const { page, size } = req.query;
   const { limit, skip } = paginationService(page, size);
+  const user = req.user;
   try {
     if (
       user.role == `admin` ||

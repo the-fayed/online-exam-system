@@ -44,12 +44,10 @@ exports.updateDepartmentHandler = async (req, res) => {
       { new: true }
     );
     if (department) {
-      res
-        .status(StatusCodes.OK)
-        .json({
-          message: `${departmentName} updated successfully!`,
-          data: department,
-        });
+      res.status(StatusCodes.OK).json({
+        message: `${departmentName} updated successfully!`,
+        data: department,
+      });
     } else {
       res
         .status(StatusCodes.BAD_REQUEST)
@@ -64,6 +62,7 @@ exports.updateDepartmentHandler = async (req, res) => {
 };
 
 exports.getAllDepartmentsHandler = async (req, res) => {
+  const { page, size } = req.query;
   const { limit, skip } = paginationService(page, size);
   try {
     let departmentsCount = 0;
@@ -71,13 +70,11 @@ exports.getAllDepartmentsHandler = async (req, res) => {
     for (let department in departments) {
       departmentsCount++;
     }
-    res
-      .status(StatusCodes.OK)
-      .json({
-        message: `Success!`,
-        departmentsCount: departmentsCount,
-        data: departments,
-      });
+    res.status(StatusCodes.OK).json({
+      message: `Success!`,
+      departmentsCount: departmentsCount,
+      data: departments,
+    });
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
