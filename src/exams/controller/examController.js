@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const Exam = require(`../model/examModel`);
+const paginationService = require("../../../common/services/paginationService");
 
 exports.addNewExamHandler = async (req, res) => {
   const { id } = req.params;
@@ -31,9 +32,10 @@ exports.addNewExamHandler = async (req, res) => {
 exports.getAllExamsHandler = async (req, res) => {
   if (req.user.role == `professor`) {
     const { id } = req.query;
+    const { limit, skip } = paginationService(page, size);
     try {
       let examsCount = 0;
-      const exams = await Exam.find({ subject: id });
+      const exams = await Exam.find({ subject: id }).skip(skip).limit(limit);
       for (let exam in exams) {
         examsCount++;
       }

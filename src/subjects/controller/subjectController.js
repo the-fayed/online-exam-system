@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const Subject = require(`../model/subjectModel`);
 const User = require("../../users/model/userModel");
+const paginationService = require(`../../../common/services/paginationService`);
 
 exports.addSubjectHandler = async (req, res) => {
   const { subjectName, subjectCode, teachBy, subjectDescription, level } =
@@ -36,8 +37,9 @@ exports.addSubjectHandler = async (req, res) => {
 
 exports.getAllSubjectsHandler = async (req, res) => {
   const { id } = req.params;
+  const { limit, skip } = paginationService(page, size);
   try {
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id }).skip(skip).limit(limit);
     let subjectsCount = 0;
     if (user.role == `professor` && user.verified == true) {
       const subjects = await Subject.find({ teachBy: id })

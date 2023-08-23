@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const Level = require(`../model/levelsModel`);
+const paginationService = require("../../../common/services/paginationService");
 
 exports.addNewLevelHandler = async (req, res) => {
   const { levelName, department, studentsCodes } = req.body;
@@ -31,15 +32,19 @@ exports.addNewLevelHandler = async (req, res) => {
 };
 
 exports.getAllLevelsHandler = async (req, res) => {
+  const { skip, limit } = paginationService(page, size);
   try {
-    let gradesCount = 0;
-    const levels = await Level.find().populate(`department`, `departmentName`);
+    let numberOfLevels = 0;
+    const levels = await Level.find()
+      .populate(`department`, `departmentName`)
+      .skip(skip)
+      .limit(limit);
     for (let level in levels) {
-      gradesCount++;
+      numberOfLevels++;
     }
     res
       .status(StatusCodes.OK)
-      .json({ message: `Grades list`, gradesCount: gradesCount, data: levels });
+      .json({ message: `Grades list`, numberOfLevels, data: levels });
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

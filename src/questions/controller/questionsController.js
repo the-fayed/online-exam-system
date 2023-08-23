@@ -1,17 +1,21 @@
 const { StatusCodes } = require("http-status-codes");
 const Question = require(`../model/questionsModel`);
 const Exam = require(`../../exams/model/examModel`);
+const paginationService = require("../../../common/services/paginationService");
 
 exports.getAllQuestionsHandler = async (req, res) => {
   const { examId } = req.params;
   const user = req.user;
+  const { limit, skip } = paginationService(page, size);
   try {
     if (
       user.role == `admin` ||
       (user.role == `professor` && user.verified == true)
     ) {
       let totalQuestions = 0;
-      const questions = await Question.find({ exam: examId });
+      const questions = await Question.find({ exam: examId })
+        .skip(skip)
+        .limit(limit);
       if (questions) {
         for (let question in questions) {
           totalQuestions++;
@@ -25,10 +29,10 @@ exports.getAllQuestionsHandler = async (req, res) => {
           .json({ message: `No questions found!` });
       }
     } else if (user.role == `student` && user.verified == true) {
-      const exam = await Exam.findOne({ _id: examId }).populate(
-        `subject`,
-        `level -_id`
-      );
+      const exam = await Exam.findOne({ _id: examId })
+        .populate(`subject`, `level -_id`)
+        .skip(skip)
+        .limit(limit);
       if ((exam.subject.level = user.level)) {
         const questions = await Question.find({ exam: exam._id }).select(
           `-rightAnswer`

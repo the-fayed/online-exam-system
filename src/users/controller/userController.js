@@ -6,6 +6,7 @@ const crypto = require(`crypto`);
 const Token = require(`../model/tokenModel`);
 const sendEmail = require(`../../../common/services/sendEmail`);
 const userVerificationTemplate = require(`../../../common/services/userVerificationTemplate`);
+const paginationService = require(`../../../common/services/paginationService`);
 const bcrypt = require(`bcrypt`);
 const jwt = require(`jsonwebtoken`);
 
@@ -44,9 +45,11 @@ exports.addUserHandler = async (req, res) => {
 };
 
 exports.getAllUsersHandler = async (req, res) => {
+  const { page, size } = req.query;
+  const { skip, limit } = paginationService(page, size);
   try {
     let numberOfUsers = 0;
-    const users = await User.find();
+    const users = await User.find().skip(skip).limit(limit).select(`-password`);
     for (let user of users) {
       numberOfUsers++;
     }
@@ -189,19 +192,21 @@ exports.loginHandler = async (req, res) => {
           token: crypto.randomBytes(32).toString(`hex`),
         });
         const url = `${process.env.BASE_URL}users/${user._id}/verify/${token}`;
-        const template = `<h1>Email Verification</h1>
-              <h3>Welcome to our TO-DO app!</h3>
-              <p> To verify your email please click this link <a href="${url}">verify now</a></p>`;
-        await sendEmail(user.email, `Email verification`, template);
+        await sendEmail(
+          user.email,
+          `Email verification`,
+          userVerificationTemplate(url)
+        );
         res.status(StatusCodes.OK).json({
           message: `A verification email was sent to you, please check your email!`,
         });
       } else if (token) {
         const url = `${process.env.BASE_URL}users/${user._id}/verify/${token}`;
-        const template = `<h1>Email Verification</h1>
-              <h3>Welcome to our TO-DO app!</h3>
-              <p> To verify your email please click this link <a href="${url}">verify now</a></p>`;
-        await sendEmail(user.email, `Email verification`, template);
+        await sendEmail(
+          user.email,
+          `Email verification`,
+          userVerificationTemplate(url)
+        );
         res.status(StatusCodes.OK).json({
           message: `A verification email was sent to you, please check your email!`,
         });
