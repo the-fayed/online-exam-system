@@ -1,4 +1,20 @@
 # online-exam-system
+![Static Badge](https://img.shields.io/badge/Language-JavaScript-yellow)
+![Static Badge](https://img.shields.io/badge/18.13.0-Node.Js-green)
+![Static Badge](https://img.shields.io/badge/4.18.2-Express.Js-blue)
+![Static Badge](https://img.shields.io/badge/DB-MongoDB-green)
+![Static Badge](https://img.shields.io/badge/7.4.0-mongoose-green)
+![Static Badge](https://img.shields.io/badge/3.0.1-nodemon-red)
+![Static Badge](https://img.shields.io/badge/2.8.5-cors-red)
+![Static Badge](https://img.shields.io/badge/1.20.2-body--parser-red)
+![Static Badge](https://img.shields.io/badge/16.3.1-dotenv-red)
+![Static Badge](https://img.shields.io/badge/2.2.0-http--status--codes-red)
+![Static Badge](https://img.shields.io/badge/17.9.2-joi-red)
+![Static Badge](https://img.shields.io/badge/5.1.0-bcrypt-red)
+![Static Badge](https://img.shields.io/badge/9.0.1-jsonwebtoken-red)
+![Static Badge](https://img.shields.io/badge/3.2.0-easy--rbac-red)
+![Static Badge](https://img.shields.io/badge/6.9.4-nodemailer-red)
+
 
 Make it easier for professors and students to take exams and track their grades!
 
