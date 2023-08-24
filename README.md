@@ -1,7 +1,5 @@
 # online-exam-system
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://studentprojectguide.com/wp-content/uploads/2020/07/Online-Exam-Portal.jpeg)
-
 Make it easier for professors and students to take exams and track their grades!
 
 ## Installation
