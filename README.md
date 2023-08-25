@@ -257,6 +257,8 @@ Then, you need to set up the dotEnv variables:
 |/api/v1/auth|POST|Open endpoint to log in|-|email, password on request body|
 |/api/v1/users/:id/verify/:token|GET|Open endpoint to verify user email|-|userId, and userToken on request params|
 
+#### Note that only the admin can add another admin or any type of system user, but the professor and student can sign up. 
+
 ### Department APIs
 
 |Endpoint|Method|Usage|Required role|Required data|
@@ -314,3 +316,4 @@ Then, you need to set up the dotEnv variables:
 |/api/v1/answers/:examId/:studentId|GET|Getting student grades and answers|Admin, Professor, or Student|ExamId and studentId on request params|
 
 ##### Note that all endPoints with the method Get have pagination service ex. ```/api/v1/users/?page=2&size=20```
+
